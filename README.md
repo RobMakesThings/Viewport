@@ -17,17 +17,18 @@ Some primitives can be added in simple line art, or with more complex shading.
 - Shard -- like a diamond ♦️
 - Mesh - Obj and STL support. 
 
-some utilites are included and required for use such as a simple Vector and matrix math. 
- Which can have their own shading style. 
+Some utilites are included and required for use such as a simple Vector and matrix math. 
+
+
 If you want to draw your own paths, you can override  Primitive.prototype.paths() or edit the source file. 
 Meshes can be added as OBJ, STL, or just by making yuour own triangles. 
 It is designed to work with p5js as a canvas or viewport but is manly designed to output SVG's for later plotting. 
 
-Documentation is available and i tried to document anything an artist would expect to work with. 
+[Documentation](https://robmakesthings.github.io/Viewport) is available. I really tried to document anything an artist would expect to work with. 
 
-Examples are available to get started. 
+Examples are available to get started as well in the examples directory
 
-## Usage
+## Getting started
 ````
 <script type="module" src="yourSketch.js"></script>
 ```` 
