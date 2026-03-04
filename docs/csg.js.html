@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>csg.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cone.html">Cone</a></li><li><a href="Cube.html">Cube</a></li><li><a href="Cylinder.html">Cylinder</a></li><li><a href="FunctionLines.html">FunctionLines</a></li><li><a href="HSphere.html">HSphere</a></li><li><a href="Mesh.html">Mesh</a><ul class='methods'><li data-type='method'><a href="Mesh.html#paths">paths</a></li></ul></li><li><a href="Node_Node.html">Node</a></li><li><a href="OutlineCone_OutlineCone.html">OutlineCone</a></li><li><a href="OutlineCylinder.html">OutlineCylinder</a></li><li><a href="OutlineSphere.html">OutlineSphere</a></li><li><a href="Path.html">Path</a></li><li><a href="Paths.html">Paths</a><ul class='methods'><li data-type='method'><a href="Paths.html#pathsToSVG">pathsToSVG</a></li></ul></li><li><a href="Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="Scene.html#ortho">ortho</a></li><li data-type='method'><a href="Scene.html#render">render</a></li></ul></li><li></li><li><a href="ShadedSphere.html">ShadedSphere</a></li><li><a href="Shard.html">Shard</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="StripedCube.html">StripedCube</a></li><li><a href="TransformedShape.html">TransformedShape</a></li><li><a href="Tree_Tree.html">Tree</a></li><li><a href="Triangle.html">Triangle</a></li><li><a href="Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="Vector.html#add">add</a></li><li data-type='method'><a href="Vector.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector.html#cross">cross</a></li><li data-type='method'><a href="Vector.html#distance">distance</a></li><li data-type='method'><a href="Vector.html#distanceSquared">distanceSquared</a></li><li data-type='method'><a href="Vector.html#div">div</a></li><li data-type='method'><a href="Vector.html#divScalar">divScalar</a></li><li data-type='method'><a href="Vector.html#dot">dot</a></li><li data-type='method'><a href="Vector.html#length">length</a></li><li data-type='method'><a href="Vector.html#lengthSquared">lengthSquared</a></li><li data-type='method'><a href="Vector.html#minComponent">minComponent</a></li><li data-type='method'><a href="Vector.html#mulScalar">mulScalar</a></li><li data-type='method'><a href="Vector.html#mult">mult</a></li><li data-type='method'><a href="Vector.html#normalize">normalize</a></li><li data-type='method'><a href="Vector.html#segmentDistance">segmentDistance</a></li><li data-type='method'><a href="Vector.html#sub">sub</a></li><li data-type='method'><a href="Vector.html#subScalar">subScalar</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#boxForShapes">boxForShapes</a></li><li><a href="global.html#loadBinaryStl">loadBinaryStl</a></li><li><a href="global.html#loadOBJ">loadOBJ</a></li><li><a href="global.html#loadTextSTL">loadTextSTL</a></li><li><a href="global.html#newDifference">newDifference</a></li><li><a href="global.html#newIntersection">newIntersection</a></li><li><a href="global.html#newTransformedOutlineCone">newTransformedOutlineCone</a></li><li><a href="global.html#newTransformedOutlineCylinder">newTransformedOutlineCylinder</a></li><li><a href="global.html#randomUnitVector">randomUnitVector</a></li><li><a href="global.html#saveBinaryStl">saveBinaryStl</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">csg.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+import './viewport.js'
+import { Path, Paths } from './path.js'
+import { Ray } from './ray.js'
+import { EmptyShape } from './shape.js'
+
+const intersection = 0
+const difference = 1
+
+/**
+     * 
+ * 
+ * Intersects the first shape with everything after
+ * @param  {Shape | Primitives} shapes 
+ * @returns {BooleanShape}
+ */
+export function newIntersection(...shapes) {
+    return newBooleanShape(intersection, shapes)
+}
+/**
+ * Subtracts following shapes from the first shape in the list
+ * @param  {Shapes | Primitives} shapes 
+ * @returns {BooleanShape}
+ */
+export function newDifference(...shapes) {
+    return newBooleanShape(difference, shapes)
+
+}
+export function newBooleanShape(op, shapes) {
+    if (shapes.length == 0) {
+        return new EmptyShape()/// empty shape here... will have to think about this more
+
+    }
+    let shape = shapes[0]
+    for (let i = 1; i &lt; shapes.length; i++) {
+
+        shape = new BooleanShape(op, shape, shapes[i])
+    }
+    // console.log(shape)
+    return shape
+}
+export class BooleanShape {
+    constructor(op, a, b) {
+        this.op = op // operation, what are we doing, adding, subtracting or union
+        this.a = a
+
+        this.b = b
+
+
+
+    }
+    compile() {
+
+    }
+    boundingBox() {
+        let s = this
+        // console.log(this)
+        let a = s.a.boundingBox()
+        let b = s.b.boundingBox()
+        return a.extend(b)
+    }
+    contains(v, f) {
+        let s = this
+        f = 1e-3
+        switch (s.op) {
+            case intersection:
+                return s.a.contains(v, f) &amp;&amp; s.b.contains(v, f)
+            case difference:
+                // console.log("dif");
+                // console.log(s.a.contains(v, f) , s.b.contains(v, -f),"difference contasins")
+
+                return s.a.contains(v, f) &amp;&amp; !s.b.contains(v, -f)
+        }
+        return false
+    }
+    intersect(ray) {
+        let s = this
+        let h1 = s.a.intersect(ray)
+        let h2 = s.b.intersect(ray)
+        let h = h1.min(h2)
+        let v = ray.position(h.t)
+        if (!h.ok() || s.contains(v, 0)) {
+            return h
+        }
+        return s.intersect(new Ray(ray.position(h.t + .01), ray.direction))
+    }
+    paths() {
+        let s = this
+        let p = s.a.paths()
+        // console.log(p.paths.concat(0))
+        p.paths = p.paths.concat(...s.b.paths().paths)
+        console.log(p)
+
+        p = p.chop(0.01)
+        let result = []
+
+        for (let path of p.paths) {
+            let newPath = []
+            for (let v of path.verts) {
+                // console.log(v)
+                v = this.Filter(v)
+
+                if (v.contains) {
+                    newPath.push(v.v)
+                }
+                else {
+                    if (newPath.length > 1) {
+                        result.push(new Path(newPath))
+                        newPath = []
+                    }
+                    newPath = []
+
+                }
+
+            }
+            if (newPath.length > 1) {
+                result.push(new Path(newPath))
+                        newPath = []
+
+            }
+
+
+        }
+
+
+        return new Paths(result)
+    }
+    Filter(v) {
+
+        return { v: v, contains: this.contains(v, 0) }
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed Mar 04 2026 00:55:02 GMT-0700 (Mountain Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>sphere.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cone.html">Cone</a></li><li><a href="Cube.html">Cube</a></li><li><a href="Cylinder.html">Cylinder</a></li><li><a href="FunctionLines.html">FunctionLines</a></li><li><a href="HSphere.html">HSphere</a></li><li><a href="Mesh.html">Mesh</a><ul class='methods'><li data-type='method'><a href="Mesh.html#paths">paths</a></li></ul></li><li><a href="Node_Node.html">Node</a></li><li><a href="OutlineCone_OutlineCone.html">OutlineCone</a></li><li><a href="OutlineCylinder.html">OutlineCylinder</a></li><li><a href="OutlineSphere.html">OutlineSphere</a></li><li><a href="Path.html">Path</a></li><li><a href="Paths.html">Paths</a><ul class='methods'><li data-type='method'><a href="Paths.html#pathsToSVG">pathsToSVG</a></li></ul></li><li><a href="Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="Scene.html#ortho">ortho</a></li><li data-type='method'><a href="Scene.html#render">render</a></li></ul></li><li></li><li><a href="ShadedSphere.html">ShadedSphere</a></li><li><a href="Shard.html">Shard</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="StripedCube.html">StripedCube</a></li><li><a href="TransformedShape.html">TransformedShape</a></li><li><a href="Tree_Tree.html">Tree</a></li><li><a href="Triangle.html">Triangle</a></li><li><a href="Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="Vector.html#add">add</a></li><li data-type='method'><a href="Vector.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector.html#cross">cross</a></li><li data-type='method'><a href="Vector.html#distance">distance</a></li><li data-type='method'><a href="Vector.html#distanceSquared">distanceSquared</a></li><li data-type='method'><a href="Vector.html#div">div</a></li><li data-type='method'><a href="Vector.html#divScalar">divScalar</a></li><li data-type='method'><a href="Vector.html#dot">dot</a></li><li data-type='method'><a href="Vector.html#length">length</a></li><li data-type='method'><a href="Vector.html#lengthSquared">lengthSquared</a></li><li data-type='method'><a href="Vector.html#minComponent">minComponent</a></li><li data-type='method'><a href="Vector.html#mulScalar">mulScalar</a></li><li data-type='method'><a href="Vector.html#mult">mult</a></li><li data-type='method'><a href="Vector.html#normalize">normalize</a></li><li data-type='method'><a href="Vector.html#segmentDistance">segmentDistance</a></li><li data-type='method'><a href="Vector.html#sub">sub</a></li><li data-type='method'><a href="Vector.html#subScalar">subScalar</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#boxForShapes">boxForShapes</a></li><li><a href="global.html#loadBinaryStl">loadBinaryStl</a></li><li><a href="global.html#loadOBJ">loadOBJ</a></li><li><a href="global.html#loadTextSTL">loadTextSTL</a></li><li><a href="global.html#newDifference">newDifference</a></li><li><a href="global.html#newIntersection">newIntersection</a></li><li><a href="global.html#newTransformedOutlineCone">newTransformedOutlineCone</a></li><li><a href="global.html#newTransformedOutlineCylinder">newTransformedOutlineCylinder</a></li><li><a href="global.html#randomUnitVector">randomUnitVector</a></li><li><a href="global.html#saveBinaryStl">saveBinaryStl</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">sphere.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+import { Vector ,randomUnitVector} from './vector.js'
+import { Box } from './box.js'
+import { Path,Paths } from './path.js'
+import { Translate,rot } from './matrix.js'
+import { radians } from './util.js'
+import { Hit ,noHit} from './hit.js'
+import { remap } from './util.js'
+/**
+     * Primitive of sphere, default paths show lat and longitude
+     * @param {Vector} center of sphere
+     * @param {Number} radius of sphere
+     */
+export class Sphere {
+    
+    constructor(center, radius) {
+        this.center = center
+        this.radius = radius
+
+        let min = new Vector(this.center.x - radius, this.center.y - radius, this.center.z - radius)
+        let max = new Vector(this.center.x + radius, this.center.y + radius, this.center.z + radius)
+        this.box = new Box(min, max)
+    }
+    compile() {
+
+    }
+    boundingBox() {
+        return this.box
+    }
+    contains(v, f) {
+        let s = this
+        // console.log(v,v.sub(s.center))
+       return v.sub(s.center).length() &lt;= s.radius + f
+    }
+    intersect(ray) {
+        let s = this
+        let radius = this.radius
+
+        let to = ray.origin.sub(s.center)
+        let b = to.dot(ray.direction)
+        let c = to.dot(to) - radius * radius
+        let d = b * b - c
+
+        if (d > 0) {
+            d = Math.sqrt(d)
+            let t1 = -b - d
+            if (t1 > 1e-2) {
+                return new Hit(s, t1)
+            }
+            let t2 = -b + d
+            if (t2 > 2e-2) {
+                return new Hit(s, t2)
+            }
+        }
+        return noHit
+
+    }
+    paths4() {// random lines but with collision logic? 
+        let paths = []
+        let seen = []
+        let radii = []
+        for (let i = 0; i &lt; 140; i++) {
+            let v
+            let m
+            for (; ;) {
+                v = randomUnitVector()
+                 m = Math.random() * 0.25 + 0.05
+                let ok = true
+
+                for (let i = 0; i &lt; seen.length; i++) {
+                    let other = seen[i]
+                    let threshold = m + radii[i] + 0.02
+                    if (other.sub(v).length() &lt; threshold) {
+                        ok = false
+                        break
+                    }
+                }
+                if (ok) {
+                    seen.push(v)
+                    radii.push(m)
+                    break
+                }
+
+            }
+
+            let p = v.cross(randomUnitVector()).normalize()
+            let q = p.cross(v).normalize()
+            let n = Math.round(Math.random() * 4) + 1
+            let path = []
+
+            for (let k = 0; k &lt; n; k++) {
+                for (let j = 0; j &lt;= 360; j += 5) {
+
+
+                    let a = radians(j)
+                    let x = v
+                    x = x.add(p.mulScalar(Math.cos(a) * m))
+                    x = x.add(q.mulScalar(Math.sin(a) * m))
+                    x = x.normalize()
+                    x = x.mulScalar(s.radius).add(s.center)
+                    path.push(x)
+
+                }
+                paths.push(path)
+                m *= .75
+            }
+
+        }
+        return new Paths(paths)
+
+
+    }
+    paths11() {// random dots all over
+        let s = this
+        let paths = []
+
+        for (let i = 0; i &lt; 20000; i++) {
+            let v = randomUnitVector()
+            v = v.mulScalar(s.radius).add(s.center)
+            paths.push(new Path([v, v]))
+
+        }
+        return new Paths(paths)
+
+    }
+    paths111() {
+        let s = this
+        let equator = []
+        for (let lng = 0; lng &lt;= 360; lng++) {
+            let v = latLngToXYZ(0, lng, s.radius)
+            equator.push(v)
+        }
+        let paths = []
+        for (let i = 0; i &lt; 100; i++) {
+            let m = new Matrix()
+            for (let j = 0; j &lt; 3; j++) {
+                let v = randomUnitVector()
+                m = m.rot(v, Math.random() * 2 * Math.PI)
+            }
+            m = m.translate(s.center)
+            paths.push(equator.transform(m))
+        }
+        return new Paths(paths)
+
+    }
+    paths() {
+        let s = this
+        let paths = []
+        let n = 10
+        let o = 10
+        for (let lat = -90 + o; lat &lt;= 90 - o; lat += n) {
+            let path = []
+            for (let lng = 0; lng &lt;= 360; lng++) {
+                let v = latLngToXYZ(lat, lng, this.radius).add(s.center)
+                // v=v.add(s.center)
+                
+
+                path.push(v)
+            }
+            paths.push(new Path(path))
+
+
+        }
+        for (let lng = 0; lng &lt;= 360; lng += n) {
+            let path = []
+            for (let lat = -90 + o; lat &lt;= 90 - o; lat++) {
+                let v = latLngToXYZ(lat, lng, this.radius+.00003).add(this.center)
+                // v=v.add(new Vector(0,0,.1))
+
+                path.push(v)
+            }   
+            paths.push(new Path(path))
+        }
+        return new Paths(paths)
+    }
+}
+
+
+export function latLngToXYZ(lat, lng, radius) {
+     lat = radians(lat)
+     lng = radians(lng)
+    let x = radius * Math.cos(lat) * Math.cos(lng)
+    let y = radius * Math.cos(lat) * Math.sin(lng)
+    let z = radius * Math.sin(lat)
+
+    return new Vector(x, y, z)
+}
+ /**
+     * 
+     * @constructor
+     * @param {Vector} center  of sphere
+     * @param {Vector} radius 
+     * @param {Vector} eye 
+     * @param {Vector} up 
+     */
+ export class OutlineSphere extends Sphere{
+   
+    constructor(center,radius,eye,up){
+        
+        super(center,radius)
+        this.eye=eye
+        this.up= up
+
+    }
+    paths(){
+        let path = []
+        let center = this.center
+        let radius = this.radius
+        // console.log(this.eye,center.sub(this.eye))
+        let hyp = center.sub(this.eye).length()
+        let opp = radius
+        let theta = Math.asin(opp/hyp)
+        let adj = opp/ Math.tan(theta)
+        let d = Math.cos(theta)*adj
+        let r = Math.sin(theta)*adj
+
+        let w = center.sub(this.eye).normalize()
+        let u = w.cross(this.up).normalize()
+        let v = w.cross(u).normalize()
+        let c = this.eye.add(w.mulScalar(d))
+
+        //  console.log(w,u,v,c)
+        for(let i= 0; i&lt;=360;i++){
+            let a = radians(i)
+            let p = c 
+            p = p.add(u.mulScalar(Math.cos(a)*r))
+            p = p.add(v.mulScalar(Math.sin(a)*r))
+            path.push(p)
+        }
+        return new Paths([new Path(path)])
+
+    }
+
+
+}
+
+/**
+     * Horizontal lines sphere
+     * 
+     * @param {Vector} center 
+     * @param {Number} radius 
+     * @param {Number} stripes amount of stripes
+     */
+export class HSphere extends Sphere{
+   
+    constructor(center,radius,stripes){
+        super(center,radius)
+        this.stripes = stripes
+    }
+    paths(){
+        let paths = []
+        let offset = 180.0/this.stripes
+        for(let lat = -90+5;lat &lt;=90-5;lat+=offset){
+            let path = []
+            for(let lng = 0;lng &lt;=360;lng++){
+                let v = latLngToXYZ(lat,lng,this.radius).add(this.center)
+                path.push(v)
+
+            }
+            paths.push(new Path(path))
+
+        }
+        return new Paths(paths)
+    }
+}
+/**
+     * sphere with simulated shading based on posiition of light
+     * @param {Vector} center 
+     * @param {Vector} radius 
+     * @param {Vector} light 
+     * @param {Vector} eye 
+     * @param {Vector} up 
+     * @param {Number} pathLen 
+     * @param {Number} density percent idk
+     */
+export class ShadedSphere extends Sphere{
+    
+    constructor(center, radius, light, eye, up ,density, pathLen ){
+        super(center,radius)
+        this.light = light
+        this.eye = eye
+        this. up= up 
+        this.density = density
+        this.pathLen = pathLen
+    }
+    paths(){
+        let paths = []
+        let s = this
+
+        let lo = s.light.sub(s.center).normalize()
+        let angleStep = .1
+        let maxSteps = s.pathLen
+        let numSamples = remap(s.density,0,1,100,1000)*s.radius*s.radius
+        for(let i=0;i&lt;numSamples;i++){
+            let path = []
+            let p = randomUnitVector().mulScalar(s.radius)
+            let rotAxis = lo.cross(p).normalize()
+            let pNorm = lo.dot(p.normalize())
+            let nSteps = maxSteps-remap(pNorm,-1,1,5,maxSteps)
+            for(let j=0; j&lt;nSteps;j++){
+                let rotM = rot(rotAxis,radians(angleStep*j))
+                let newPoint = rotM.mulDirection(p).normalize().mulScalar(s.radius).add(s.center)
+                path.push(newPoint)
+            }
+            paths.push(new Path(path))
+        }
+        // let outLine = new OutlineSphere(s.center,s.radius,s.eye,s.up)
+        // paths.push(outLine.paths()[0])
+
+        return new Paths(paths)
+
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed Mar 04 2026 00:55:02 GMT-0700 (Mountain Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

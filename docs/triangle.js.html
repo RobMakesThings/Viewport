@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>triangle.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cone.html">Cone</a></li><li><a href="Cube.html">Cube</a></li><li><a href="Cylinder.html">Cylinder</a></li><li><a href="FunctionLines.html">FunctionLines</a></li><li><a href="HSphere.html">HSphere</a></li><li><a href="Mesh.html">Mesh</a><ul class='methods'><li data-type='method'><a href="Mesh.html#paths">paths</a></li></ul></li><li><a href="Node_Node.html">Node</a></li><li><a href="OutlineCone_OutlineCone.html">OutlineCone</a></li><li><a href="OutlineCylinder.html">OutlineCylinder</a></li><li><a href="OutlineSphere.html">OutlineSphere</a></li><li><a href="Path.html">Path</a></li><li><a href="Paths.html">Paths</a><ul class='methods'><li data-type='method'><a href="Paths.html#pathsToSVG">pathsToSVG</a></li></ul></li><li><a href="Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="Scene.html#ortho">ortho</a></li><li data-type='method'><a href="Scene.html#render">render</a></li></ul></li><li></li><li><a href="ShadedSphere.html">ShadedSphere</a></li><li><a href="Shard.html">Shard</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="StripedCube.html">StripedCube</a></li><li><a href="TransformedShape.html">TransformedShape</a></li><li><a href="Tree_Tree.html">Tree</a></li><li><a href="Triangle.html">Triangle</a></li><li><a href="Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="Vector.html#add">add</a></li><li data-type='method'><a href="Vector.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector.html#cross">cross</a></li><li data-type='method'><a href="Vector.html#distance">distance</a></li><li data-type='method'><a href="Vector.html#distanceSquared">distanceSquared</a></li><li data-type='method'><a href="Vector.html#div">div</a></li><li data-type='method'><a href="Vector.html#divScalar">divScalar</a></li><li data-type='method'><a href="Vector.html#dot">dot</a></li><li data-type='method'><a href="Vector.html#length">length</a></li><li data-type='method'><a href="Vector.html#lengthSquared">lengthSquared</a></li><li data-type='method'><a href="Vector.html#minComponent">minComponent</a></li><li data-type='method'><a href="Vector.html#mulScalar">mulScalar</a></li><li data-type='method'><a href="Vector.html#mult">mult</a></li><li data-type='method'><a href="Vector.html#normalize">normalize</a></li><li data-type='method'><a href="Vector.html#segmentDistance">segmentDistance</a></li><li data-type='method'><a href="Vector.html#sub">sub</a></li><li data-type='method'><a href="Vector.html#subScalar">subScalar</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#boxForShapes">boxForShapes</a></li><li><a href="global.html#loadBinaryStl">loadBinaryStl</a></li><li><a href="global.html#loadOBJ">loadOBJ</a></li><li><a href="global.html#loadTextSTL">loadTextSTL</a></li><li><a href="global.html#newDifference">newDifference</a></li><li><a href="global.html#newIntersection">newIntersection</a></li><li><a href="global.html#newTransformedOutlineCone">newTransformedOutlineCone</a></li><li><a href="global.html#newTransformedOutlineCylinder">newTransformedOutlineCylinder</a></li><li><a href="global.html#randomUnitVector">randomUnitVector</a></li><li><a href="global.html#saveBinaryStl">saveBinaryStl</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">triangle.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Box } from "./box.js"
+import {Mesh} from "./mesh.js"
+import { EPS } from "./common.js"
+import { Vector,min,max } from './vector.js'
+// import { Box } from './box.js'
+import { Hit,noHit } from './hit.js'
+
+import { Path,Paths } from './path.js'
+ /**
+     * for use inside a {@link Mesh}
+     * @param {Vector} v1 vertex 1
+     * @param {Vector} v2 vertex 3
+     * @param {Vector} v3 vertex 3
+     */
+export class Triangle {
+   
+    constructor(v1, v2, v3) {/// have to pass a  vector 
+        this.v1 = v1
+        this.v2 = v2
+        this.v3 = v3
+        this.box
+        this.updateBoundingBox()
+    }
+    updateBoundingBox() {
+        // console.log(this)
+        let min = this.v1.min(this.v2)
+        min = min.min(this.v3)
+        let max = this.v1.max(this.v2)
+        max = max.max(this.v3)
+        this.box = new Box(min, max)
+    }
+    compile() {
+
+    }
+    boundingBox() {
+        return this.box
+    }
+    contains(v, f) {
+        return false
+    }
+    intersect(ray) {
+        let t = this
+        let e1x = t.v2.x - t.v1.x // edge 1 x 
+        let e1y = t.v2.y - t.v1.y
+        let e1z = t.v2.z - t.v1.z
+        // console.log(e1x,e1y,e1z,"edge 2's")
+        let e2x = t.v3.x - t.v1.x // edge 2 x 
+        let e2y = t.v3.y - t.v1.y
+        let e2z = t.v3.z - t.v1.z
+        // console.log(e2x,e2y,e2z,"edge 2's")// edges seem fine
+        // console.log(ray)// have different ray? 
+        let px = ray.direction.y * e2z - ray.direction.z * e2y
+        let py = ray.direction.z * e2x - ray.direction.x * e2z
+        let pz = ray.direction.x * e2y - ray.direction.y * e2x
+        // console.log(px,py,pz,"py's and stuff");//wrong det here 
+        
+        let det = e1x * px + e1y * py + e1z * pz
+        // console.log(det,"det");//wrong det here 
+        
+        if (det > -EPS &amp;&amp; det &lt; EPS) {
+            return noHit
+        }
+        let inv = 1.0 / det
+        let tx = ray.origin.x - t.v1.x
+        let ty = ray.origin.y - t.v1.y
+        let tz = ray.origin.z - t.v1.z
+        let u = (tx * px + ty * py + tz * pz) * inv
+        if (u &lt; 0 || u > 1) {
+            return noHit
+        }
+        let qx = ty * e1z - tz * e1y
+        let qy = tz * e1x - tx * e1z
+        let qz = tx * e1y - ty * e1x
+        let v = (ray.direction.x * qx + ray.direction.y * qy + ray.direction.z * qz) * inv
+        // console.log(u,v);
+        
+        if (v &lt; 0 || u+v > 1) {/// seems issue here 
+            return noHit
+        }
+        let d = (e2x * qx + e2y * qy + e2z * qz) * inv
+        if (d &lt; EPS) {
+            return noHit
+        }
+        return new Hit(t,d)
+    }
+    paths(){
+        let t = this
+        // console.log(this)
+        return  new Paths([
+            new Path([t.v1,t.v2]),
+            new Path([t.v2,t.v3]),
+            new Path([t.v3,t.v1])
+
+        ]
+        
+            
+        )
+
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed Mar 04 2026 00:55:02 GMT-0700 (Mountain Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

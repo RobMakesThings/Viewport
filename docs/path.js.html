@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>path.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cone.html">Cone</a></li><li><a href="Cube.html">Cube</a></li><li><a href="Cylinder.html">Cylinder</a></li><li><a href="FunctionLines.html">FunctionLines</a></li><li><a href="HSphere.html">HSphere</a></li><li><a href="Mesh.html">Mesh</a><ul class='methods'><li data-type='method'><a href="Mesh.html#paths">paths</a></li></ul></li><li><a href="Node_Node.html">Node</a></li><li><a href="OutlineCone_OutlineCone.html">OutlineCone</a></li><li><a href="OutlineCylinder.html">OutlineCylinder</a></li><li><a href="OutlineSphere.html">OutlineSphere</a></li><li><a href="Path.html">Path</a></li><li><a href="Paths.html">Paths</a><ul class='methods'><li data-type='method'><a href="Paths.html#pathsToSVG">pathsToSVG</a></li></ul></li><li><a href="Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="Scene.html#ortho">ortho</a></li><li data-type='method'><a href="Scene.html#render">render</a></li></ul></li><li></li><li><a href="ShadedSphere.html">ShadedSphere</a></li><li><a href="Shard.html">Shard</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="StripedCube.html">StripedCube</a></li><li><a href="TransformedShape.html">TransformedShape</a></li><li><a href="Tree_Tree.html">Tree</a></li><li><a href="Triangle.html">Triangle</a></li><li><a href="Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="Vector.html#add">add</a></li><li data-type='method'><a href="Vector.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector.html#cross">cross</a></li><li data-type='method'><a href="Vector.html#distance">distance</a></li><li data-type='method'><a href="Vector.html#distanceSquared">distanceSquared</a></li><li data-type='method'><a href="Vector.html#div">div</a></li><li data-type='method'><a href="Vector.html#divScalar">divScalar</a></li><li data-type='method'><a href="Vector.html#dot">dot</a></li><li data-type='method'><a href="Vector.html#length">length</a></li><li data-type='method'><a href="Vector.html#lengthSquared">lengthSquared</a></li><li data-type='method'><a href="Vector.html#minComponent">minComponent</a></li><li data-type='method'><a href="Vector.html#mulScalar">mulScalar</a></li><li data-type='method'><a href="Vector.html#mult">mult</a></li><li data-type='method'><a href="Vector.html#normalize">normalize</a></li><li data-type='method'><a href="Vector.html#segmentDistance">segmentDistance</a></li><li data-type='method'><a href="Vector.html#sub">sub</a></li><li data-type='method'><a href="Vector.html#subScalar">subScalar</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#boxForShapes">boxForShapes</a></li><li><a href="global.html#loadBinaryStl">loadBinaryStl</a></li><li><a href="global.html#loadOBJ">loadOBJ</a></li><li><a href="global.html#loadTextSTL">loadTextSTL</a></li><li><a href="global.html#newDifference">newDifference</a></li><li><a href="global.html#newIntersection">newIntersection</a></li><li><a href="global.html#newTransformedOutlineCone">newTransformedOutlineCone</a></li><li><a href="global.html#newTransformedOutlineCylinder">newTransformedOutlineCylinder</a></li><li><a href="global.html#randomUnitVector">randomUnitVector</a></li><li><a href="global.html#saveBinaryStl">saveBinaryStl</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">path.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Vector } from "./vector.js"
+import { Box } from "./box.js"
+import { Matrix } from "./matrix.js"
+import { clipFilter } from "./filter.js"
+
+/**
+ *  a path consists of at least two vectors creating a line
+ */
+export class Path {//
+    constructor(verts) {
+        this.type = "path"
+        this.verts = verts
+   
+
+
+    }
+    boundingBox() {
+        let box = new Box(this.verts[0], this.verts[1])
+        for (let vert in this.verts) {
+            box = box.extend(new Box(vert, vert))
+        }
+    }
+    transform(matrix) {
+        let p = this
+        let result = []
+        for (let v of p.verts) {
+            v = matrix.mulPosition(v)
+
+            result.push(v)
+
+
+        }
+        return new Path(result)
+    }
+    chop(step) {
+        let result = []
+        let p = this.verts
+
+
+        if (this.type == Paths) { this.chop() }
+        for (let i = 0; i &lt; this.verts.length - 1; i++) {
+
+            let a = p[i]
+            let b = p[i + 1]
+
+            let v = b.sub(a)
+            let l = v.length()
+            if (i == 0) {
+                result.push(a)
+            }
+            let d = step
+            for (; d &lt; l; d += step) {
+                result.push(a.add(v.mulScalar(d / l)))
+            }
+            result.push(b)
+
+        }
+        return new Path(result)
+
+    }
+    filter(matrix, eye, step) {
+        let result = []
+        let path = []
+        let p = this.verts
+        for (let v of p) {
+
+            let clipV = clipFilter(matrix, eye, step, v)
+            let ok = clipV.hit
+            // ok = true // show hidden lines
+
+            if (ok) {
+                path.push(clipV.w)
+            }
+            else {
+                if (path.length > 1) {
+                    result.push(new Path(path))
+                }
+                path = []
+            }
+
+        }
+        if (path.length > 1) {
+            result.push(new Path(path))
+
+
+        }
+
+
+        return new Paths(result)
+
+        // else {return false}
+
+    }
+    simplify(threshold) {
+        let p = this.verts
+        if (p.length &lt; 3) {
+            return p
+        }
+        let a = p[0]
+        let b = p[p.length - 1]
+        let index = -1
+        let distance = 0.0
+        // console.log(a,b)
+
+        for (let i = 1; i &lt; p.length - 1; i++) {
+        // console.log(a,b,p[i])
+
+            let d = p[i].segmentDistance(a, b)
+            if (d > distance) {
+                index = i
+                distance = d
+            }
+        }
+
+        if (distance > threshold) {
+            // console.log(a,b,p,index)
+
+            let r1 = new Path(p.slice(0, index + 1)).simplify(threshold)
+            
+            let r2 = new Path(p.slice(index)).simplify(threshold)
+            // have to convert back to array to use slice.
+            if(r1 instanceof Path){
+                r1 = r1.verts
+            }
+            if(r2 instanceof Path){
+                r2 = r2.verts
+            }
+            return new Path(r1.slice(0, r1.length - 1).concat(r2))
+        }
+        else {
+            return new Path([a, b])
+        }
+
+    }
+    toSVG(path = this) {
+
+        let coords = ''
+        for (let v of this.verts) {
+
+            coords += `${v.x},${v.y} `
+        }
+       
+        const points = coords
+
+        return `&lt;polyline stroke="black" fill="none" points="${points}" />`;
+    }
+}
+
+/**
+ * Paths are a collections of multiple{@link Path} objects
+ */
+export class Paths {
+    constructor(paths = []) {
+        this.paths = paths
+        this.type = "paths"
+
+    }
+
+    boundingBox() {
+        let box = this.paths[0].boundingBox()
+        for (let path of this.paths) {
+            box = box.extend(path.boundingBox())
+        }
+        return box
+    }
+    transform(matrix) {
+        let result = []
+        for (let path of this.paths) {
+           
+            result.push(path.transform(matrix))
+        }
+
+        return new Paths(result)
+
+    }
+    chop(step) {
+        let result = []
+        for (let path of this.paths) {
+
+
+            result.push(path.chop(step))
+        }
+        return new Paths(result)
+    }
+    filter(matrix, eye, step) {
+        let result = []
+        for (let path of this.paths) {
+            path = path.filter(matrix, eye, step)
+            
+                result.push(...path.paths)//unpack values here or else we've got Paths inside of Path or some bs 
+
+
+
+          
+        }
+      
+        return new Paths(result)
+
+    }
+    simplify(threshold) {
+        let result = []
+        for (let path of this.paths) {
+            path = path.simplify(threshold)
+            if (!(path instanceof Path)){/// not really a good reason we have to do this that ive found, works sometimes without it but not others
+                path = new Path(path)
+            }
+            result.push(path)/// might need to unpack values here? idk we'll see. &lt;&lt;&lt; i did indeed need to unpack the values
+        }
+        return new Paths(result)
+    }
+    /**
+     * 
+     * @param {Paths} paths 
+     * @param {Number} width of SVG File 
+     * @param {Number} height of SVG File 
+     */
+    pathsToSVG(paths = this.paths, width, height) {
+        const lines = [];
+
+        // Open the SVG tag
+        lines.push(`&lt;svg width="${width}" height="${height}" version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">`);
+
+        // Add the coordinate system transformation (flips Y-axis to be bottom-up)
+        lines.push(`  &lt;g transform="translate(0,${height}) scale(1,-1)">`);
+        // console.log(paths.paths)
+        // Iterate through each individual path
+        for (const path of paths.paths) {
+            // We reuse the toSVG function from the previous step
+            if (!(path instanceof Path)) {
+                console.log(path)
+
+                path.pathsToSVG()
+            }
+            // console.log(path)
+            lines.push(`${path.toSVG()}`);
+        }
+
+        // Close tags
+        lines.push("&lt;/g>");
+        lines.push("&lt;/svg>");
+
+        this.saveSVGToFile(lines.join("\n"))
+    }
+    saveSVGToFile(svgString, fileName = "output.svg") {
+        // 1. Create a Blob from the SVG string
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+
+        // 2. Create an anchor element
+        const link = document.createElement("a");
+
+        // 3. Create a URL for the blob and set it as the download target
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+
+        // 4. Trigger the download
+        document.body.appendChild(link);
+        link.click();
+
+        // 5. Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed Mar 04 2026 00:55:02 GMT-0700 (Mountain Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
