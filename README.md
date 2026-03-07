@@ -16,60 +16,22 @@ Some primitives can be added in simple line art, or with more complex shading.
 - Cube, 🎲
 - Cone,  🎄
 - Cylinder, 🛢️
-- Shard -- like a diamond ♦️
+- Shard -- like a diamond or two pyramids ♦️
 - Mesh - Obj and STL support. 
 
-Some utilites are included and required for use such as a simple Vector and matrix math. 
+Some utilites are included and required for use such as a simple vector and matrix math. 
 
 
-If you want to draw your own paths, you can override  Primitive.prototype.paths() or edit the source file. 
 
-Meshes can be added as OBJ, STL, or just by making yuour own triangles. 
+[Documentation and a quick guide](https://robmakesthings.github.io/Viewport.js) is available. I tried to document anything an artist would expect to work with. I also put together an "interactive example" sketch to play with. 
 
-[Documentation](https://robmakesthings.github.io/Viewport.js) is available. I tried to document anything an artist would expect to work with. 
+Examples are available to in the example directory, but to setup a scene, it only takes a dozen lines of code.  It works with p5.js as a canvas but is mainly designed to output SVG's for later plotting. 
 
-Examples are available to in the example directory, but to setup a scene, it only takes a dozen lines of code as outlined below.  It works with p5.js as a canvas but is mainly designed to output SVG's for later plotting. 
-
-## Getting started
-````
-<script type="module" src="yourSketch.js"></script>
-```` 
-yourSketch.js
-````
-import { Scene, Cube,Vector} from "../src/viewport.js";
-
-let scene = new Scene()
-let center = new Vector(0, 0, 0)
-let up = new Vector(0, 0, 1)
-let eye = new Vector(3, 3, 3)
-let cube = new Cube()
-let w= 250; let h = 250;
-scene.add(cube)
-let paths = scene.render(eye, center, up, w, h, fovy, 0.01, 100,0.1)
-paths.pathsToSVG()
-
-````
-The easiest way to place a shape where you want to put it is with the Transformed shape class. This allows you to place any object that assumes its drawn at 0,0 , such as a cylinder, and transform it anywhere in 3d space. 
-
-````
-let matrix = Translate(new Vector(-3,0,0))/// translate a shape 3 units to the left
-matrix = matrix.rotate(up,radians(45))// rotate matrix 45 degrees on z axis
-cube = new TransformedShape(cube,matrix)
-scene.add(cube)
-````
 
 
 ![skyscrapers and shards](./examples/assets/img/example2.png)
 
 ![primitives, skyscrapers, nodes](./examples/assets/img/example1.png) 
-
-
-
-
-
-
-
-
 
 # Todo list 
 

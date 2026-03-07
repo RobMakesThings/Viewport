@@ -6,11 +6,11 @@ import { axisNone,axisX,axisY,axisZ } from './axis.js'
 import { median } from './util.js'
 
 export class Tree {
-    /**
-     * Defines bounding volume heirarchy tree for faster collision processing. 
-     * if a ray hits doesnt hit a bounding box it will hit not hit anything else. 
-     * @param {Array} shapes t
-     */
+    // /**
+    //  * Defines bounding volume heirarchy tree for faster collision processing. 
+    //  * if a ray hits doesnt hit a bounding box it will hit not hit anything else. 
+    //  * @param {Array} shapes t
+    //  */
     constructor(shapes) {
         this.box = boxForShapes(shapes)
         this.root = new Node(shapes)
@@ -35,11 +35,11 @@ export class Tree {
 }
 
 export class Node {
-    /**
-     * Defines a node inside a BVH Tree
-     * at some point i would love to like put some of these functions into web workers or something
-     * @param {Array} shapes 
-     */
+    // /**
+    //  * Defines a node inside a BVH Tree
+    //  * at some point i would love to like put some of these functions into web workers or something
+    //  * @param {Array} shapes 
+    //  */
     constructor(shapes=null) {
         this.axis = axisNone
         this.point = 0

@@ -1,8 +1,8 @@
 
 /**
- * @module Ln
+ * @module viewport
  * 
- * @abstract
+ * 
  * @description
  * These are all the things you should need to start drawing shit. {@link ./Scene.js }
  * @Class Scene
